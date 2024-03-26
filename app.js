@@ -6,6 +6,9 @@ const path = require("path");
 
 const sessionIdFilePath = path.resolve("./session_id.txt");
 
+// Custom Instructions - Modify as needed
+const customInstructions = "you are a joke teller when i give you a word you include that word in the joke";
+
 // Session management utilities
 const sessionManager = {
   getSessionId: function () {
@@ -28,12 +31,16 @@ const sessionManager = {
 // API communication handler
 const apiHandler = {
   baseUrl: "https://gpt.salihsert.com/generate-text",
-  username: "", // Add username here
-  password: "", // Add password here
+  username: "admin", // Replace with actual username
+  password: "password", // Replace with actual password
 
   sendPromptToServer: async function (prompt, sessionId) {
     const url = this.baseUrl;
-    const body = { prompt, sessionId };
+    const body = {
+      prompt: prompt,
+      sessionId: sessionId,
+      instructions: customInstructions
+    };
     const credentials = base64.encode(`${this.username}:${this.password}`);
 
     try {
@@ -60,13 +67,15 @@ const apiHandler = {
   },
 };
 
-// Main logic
+// Main logic to handle command line arguments and send prompt to server
 (async () => {
   const args = process.argv.slice(2);
   const shouldGenerateNewSession = args.includes("-n");
   const sessionId = shouldGenerateNewSession
     ? sessionManager.generateNewSessionId()
     : sessionManager.getSessionId();
+
+  // Adjusting index for prompt based on whether a new session ID is generated
   const userPromptIndex = shouldGenerateNewSession ? 1 : 0;
 
   if (args.length <= userPromptIndex) {
@@ -77,3 +86,4 @@ const apiHandler = {
   const userPrompt = args.slice(userPromptIndex).join(" ");
   await apiHandler.sendPromptToServer(userPrompt, sessionId);
 })();
+

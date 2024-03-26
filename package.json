@@ -1,0 +1,16 @@
+{
+  "name": "gpt-client",
+  "version": "1.0.0",
+  "description": "This Node.js application interacts with an external API to send user prompts and receive generated text responses. It utilizes session management to maintain a unique session for each user, allowing for persistent interactions with the API across multiple commands.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "base-64": "^1.0.0",
+    "uuid": "^9.0.1"
+  }
+}
