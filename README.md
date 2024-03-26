@@ -74,6 +74,3 @@ The `customInstructions` variable plays a vital role in shaping the output. For 
 - **Persistent Session IDs**: If you're experiencing issues with session continuity, ensure `session_id.txt` is readable and writable.
 - **API Communication**: Confirm that the API URL and credentials are correctly configured and that the API service is available.
 
----
-
-This updated `README.md` clarifies the application's features, especially highlighting how to use and modify the `customInstructions` for personalized text generation. Remember to replace `<repository-url>` and `<repository-directory>` with your actual repository details.
