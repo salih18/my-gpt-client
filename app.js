@@ -6,8 +6,14 @@ const path = require("path");
 
 const sessionIdFilePath = path.resolve("./session_id.txt");
 
-// Custom Instructions - Modify as needed
-const customInstructions = "you are a joke teller when i give you a word you include that word in the joke";
+// Default configuration - Can be modified as needed
+const config = {
+  baseUrl: "https://gpt.salihsert.com/generate-text", // Server URL
+  username: "admin", // Basic Auth Username
+  password: "password", // Basic Auth Password
+  model: "gpt-3.5-turbo-16k-0613",
+  customInstructions: "you are helpful assistant.", // Custom instructions
+};
 
 // Session management utilities
 const sessionManager = {
@@ -28,23 +34,25 @@ const sessionManager = {
   },
 };
 
-// API communication handler
+// Enhanced API communication handler for flexibility
 const apiHandler = {
-  baseUrl: "https://gpt.salihsert.com/generate-text",
-  username: "admin", // Replace with actual username
-  password: "password", // Replace with actual password
-
-  sendPromptToServer: async function (prompt, sessionId) {
-    const url = this.baseUrl;
+  sendPromptToServer: async function ({
+    prompt,
+    sessionId,
+    model = config.model,
+    maxTokens = 150,
+  }) {
     const body = {
-      prompt: prompt,
-      sessionId: sessionId,
-      instructions: customInstructions
+      prompt,
+      sessionId,
+      instructions: config.customInstructions,
+      model,
+      maxTokens,
     };
-    const credentials = base64.encode(`${this.username}:${this.password}`);
+    const credentials = base64.encode(`${config.username}:${config.password}`);
 
     try {
-      const response = await axios.post(url, body, {
+      const response = await axios.post(config.baseUrl, body, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Basic ${credentials}`,
@@ -75,7 +83,6 @@ const apiHandler = {
     ? sessionManager.generateNewSessionId()
     : sessionManager.getSessionId();
 
-  // Adjusting index for prompt based on whether a new session ID is generated
   const userPromptIndex = shouldGenerateNewSession ? 1 : 0;
 
   if (args.length <= userPromptIndex) {
@@ -84,6 +91,5 @@ const apiHandler = {
   }
 
   const userPrompt = args.slice(userPromptIndex).join(" ");
-  await apiHandler.sendPromptToServer(userPrompt, sessionId);
+  await apiHandler.sendPromptToServer({ prompt: userPrompt, sessionId });
 })();
-
